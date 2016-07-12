@@ -1,27 +1,13 @@
 package demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.HashMap;
 import java.util.Map;
-
 /**
  * <OL>
  * <LI> Confirm that the Redis instance is avaialbe. Perhaps run {@code FLUSHDB}, but only </LI>
@@ -34,7 +20,7 @@ import java.util.Map;
  * <LI>Verify the results: {@code redis-cli keys '*' | xargs redis-cli del}</LI>
  * </OL>
  */
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 @SpringBootApplication
 @RestController
 public class DemoApplication {
@@ -43,44 +29,33 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@Bean
-	HttpSessionStrategy httpSessionStrategy() {
-		return new HeaderHttpSessionStrategy();
-	}
+//	@Bean
+//	HttpSessionStrategy httpSessionStrategy() {
+//		return new HeaderHttpSessionStrategy();
+//	}
 
-	@RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-	Map<String, String> helloUser(Principal principal) {
-		Map<String, String> result = new HashMap<>();
-		result.put("username", principal.getName());
-		return result;
-	}
+//	@RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+//	Map<String, String> helloUser(Principal principal) {
+//		Map<String, String> result = new HashMap<>();
+//		result.put("username", principal.getName());
+//		return result;
+//	}
+//
+//	@RequestMapping("/logout")
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
+//	void logout(HttpSession session) {
+//		session.invalidate();
+//	}
 
-	@RequestMapping("/logout")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	void logout(HttpSession session) {
-		session.invalidate();
-	}
-}
 
-@EnableWebSecurity
-class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-				.authorizeRequests()
-				.anyRequest().authenticated()
-				.and()
-				.httpBasic();
-	}
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String handle(@RequestParam Map<String, String> reqPar) throws Exception {
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		return "ok";
 
-		auth
-				.inMemoryAuthentication()
-				.withUser("user").password("password").roles("USER");
 	}
 }
+
 
 
