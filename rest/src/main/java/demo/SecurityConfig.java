@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 	BasicAuthenticationFilter fd;
 	
