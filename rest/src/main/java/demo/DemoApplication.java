@@ -22,7 +22,7 @@ import java.util.Map;
  */
 //@EnableRedisHttpSession
 @SpringBootApplication
-@RestController
+
 public class DemoApplication {
 
 	public static void main(String[] args) {
@@ -49,12 +49,12 @@ public class DemoApplication {
 
 
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String handle(@RequestParam Map<String, String> reqPar) throws Exception {
-
-		return "ok";
-
-	}
+//	@RequestMapping(value = "/test", method = RequestMethod.GET)
+//	public String handle(@RequestParam Map<String, String> reqPar) throws Exception {
+//
+//		return "ok";
+//
+//	}
 }
 
 
