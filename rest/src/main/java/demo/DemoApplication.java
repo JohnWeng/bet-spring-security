@@ -46,6 +46,10 @@ public class DemoApplication {
 		result.put("usernamlllllllllle", principal.getName());
 		return result;
 	}
+	@RequestMapping(value = "/2", produces = MediaType.APPLICATION_JSON_VALUE)
+	String helloUser2() {
+		return "hello";
+	}
 //
 //	@RequestMapping("/logout")
 //	@ResponseStatus(HttpStatus.NO_CONTENT)

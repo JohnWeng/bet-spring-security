@@ -17,6 +17,7 @@ import java.util.List;
 
 @Component
 public class customAuthenticationProvider implements AuthenticationProvider{
+    int bac=5;
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getPrincipal() + "";
@@ -33,6 +34,6 @@ System.out.print("ggggggggggggggggg");
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return true;
     }
 }
