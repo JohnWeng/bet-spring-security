@@ -1,5 +1,9 @@
 package demo;
 
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,11 +12,8 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.HeaderHttpSessionStrategy;
 import org.springframework.session.web.http.HttpSessionStrategy;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <OL>
@@ -40,31 +41,7 @@ public class DemoApplication {
 		return new HeaderHttpSessionStrategy();
 	}
 
-	@RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-	Map<String, String> helloUser(Principal principal) {
-		Map<String, String> result = new HashMap<>();
-		result.put("usernamlllllllllle", principal.getName());
-		return result;
-	}
-	@RequestMapping(value = "/2", produces = MediaType.APPLICATION_JSON_VALUE)
-	String helloUser2() {
-		return "hello";
-	}
-//
-//	@RequestMapping("/logout")
-//	@ResponseStatus(HttpStatus.NO_CONTENT)
-//	void logout(HttpSession session) {
-//		session.invalidate();
-//	}
 
-
-
-//	@RequestMapping(value = "/test", method = RequestMethod.GET)
-//	public String handle(@RequestParam Map<String, String> reqPar) throws Exception {
-//
-//		return "ok";
-//
-//	}
 }
 
 

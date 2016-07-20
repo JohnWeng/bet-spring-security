@@ -24,6 +24,9 @@ package demo;
 //}
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,9 +38,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jweng on 7/12/2016.
@@ -90,6 +90,8 @@ import java.util.List;
 @EnableWebSecurity(debug = true)
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+//	FilterSecurityInterceptor
 //
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
@@ -104,6 +106,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return super.authenticationManagerBean();
 //
 //    }
+	
+	 @Bean
+	    public CustomSuccessHandler customSuccessHandler() {
+	        CustomSuccessHandler customSuccessHandler = new CustomSuccessHandler();
+	        return customSuccessHandler;
+	    }
 
     @Bean
     @Override
@@ -120,6 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.print("dffffffffffffff");
         CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
         customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(customSuccessHandler());
         return customUsernamePasswordAuthenticationFilter;
     }
 
