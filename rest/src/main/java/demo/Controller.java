@@ -1,13 +1,13 @@
 package demo;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class Controller {
@@ -17,6 +17,14 @@ public class Controller {
 
 		return "ok";
 
+	}
+
+
+	@RequestMapping(value = "/ttt",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	Map<String, String> ttt(Principal principal) {
+		Map<String, String> result = new HashMap<>();
+		result.put("usernamlllllllllle", principal.getName());
+		return result;
 	}
 	
 	@RequestMapping(value = "/ttt",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

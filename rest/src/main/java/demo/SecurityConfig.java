@@ -1,43 +1,49 @@
 package demo;
 
-//
-//@EnableWebSecurity(debug = true)
-//class SecurityConfig extends WebSecurityConfigurerAdapter {
-//	BasicAuthenticationFilter fd;
-//
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http
-//				.authorizeRequests()
-//				.anyRequest().authenticated()
-//				.and()
-//				.httpBasic();
-//	}
-//
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//
-//		auth
-//				.inMemoryAuthentication()
-//				.withUser("user").password("password").roles("USER");
-//	}
-//}
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+
+@EnableWebSecurity
+class SecurityConfig extends WebSecurityConfigurerAdapter {
+	BasicAuthenticationFilter fd;
+//	HttpSessionRequestCache
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.authorizeRequests()
+				.anyRequest().authenticated()
+				.and()
+				.httpBasic()
+				.and()
+				.requestCache()
+				.requestCache(httpSessionRequestCache())
+				.and()
+				.anonymous().disable();}
+
+
+	@Bean
+	public HttpSessionRequestCache httpSessionRequestCache() {
+		HttpSessionRequestCache httpSessionRequestCache = new HttpSessionRequestCache();
+		httpSessionRequestCache.setCreateSessionAllowed(false);
+		return httpSessionRequestCache;
+	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
+		auth
+				.inMemoryAuthentication()
+				.withUser("user").password("password").roles("USER");
+	}
+}
+
 
 /**
  * Created by jweng on 7/12/2016.
@@ -85,77 +91,77 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 
 
-
-@Configuration
-@EnableWebSecurity(debug = true)
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-//	FilterSecurityInterceptor
+//
+//@Configuration
+//@EnableWebSecurity(debug = true)
+////@EnableGlobalMethodSecurity(prePostEnabled = true)
+//public class SecurityConfig extends WebSecurityConfigurerAdapter {
+//
+////	FilterSecurityInterceptor
+////
+////    @Bean
+////    public PasswordEncoder passwordEncoder() {
+////        return new BCryptPasswordEncoder();
+////    }
+////
+//
+////
+////    @Bean( name="myAuthenticationManagerssssssssss")
+////    @Override
+////    public AuthenticationManager authenticationManagerBean() throws Exception {
+////        return super.authenticationManagerBean();
+////
+////    }
+//
+//	 @Bean
+//	    public CustomSuccessHandler customSuccessHandler() {
+//	        CustomSuccessHandler customSuccessHandler = new CustomSuccessHandler();
+//	        return customSuccessHandler;
+//	    }
 //
 //    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-
-//
-//    @Bean( name="myAuthenticationManagerssssssssss")
 //    @Override
 //    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//
+//        List<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
+//        authenticationProviderList.add(myAuthenticationProvider);
+//        AuthenticationManager authenticationManager = new ProviderManager(
+//                authenticationProviderList);
+//        return authenticationManager;
 //    }
-	
-	 @Bean
-	    public CustomSuccessHandler customSuccessHandler() {
-	        CustomSuccessHandler customSuccessHandler = new CustomSuccessHandler();
-	        return customSuccessHandler;
-	    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        List<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
-        authenticationProviderList.add(myAuthenticationProvider);
-        AuthenticationManager authenticationManager = new ProviderManager(
-                authenticationProviderList);
-        return authenticationManager;
-    }
-
-    @Bean
-    CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFiltersssssssss() throws Exception {
-        System.out.print("dffffffffffffff");
-        CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
-        customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
-        customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(customSuccessHandler());
-        return customUsernamePasswordAuthenticationFilter;
-    }
-
-
-    @Autowired
-    private customAuthenticationProvider myAuthenticationProvider;
-
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(customUsernamePasswordAuthenticationFiltersssssssss(), BasicAuthenticationFilter.class);
-        /*.addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)*/;
-
-
-    }
-
-//    @Override
+//
+//    @Bean
+//    CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFiltersssssssss() throws Exception {
+//        System.out.print("dffffffffffffff");
+//        CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
+//        customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
+//        customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(customSuccessHandler());
+//        return customUsernamePasswordAuthenticationFilter;
+//    }
+//
+//
+//    @Autowired
+//    private customAuthenticationProvider myAuthenticationProvider;
+//
 //    protected void configure(HttpSecurity http) throws Exception {
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.addFilterBefore(new CustomUsernamePasswordAuthenticationFilter(), DelegatingFilterProxy.class);
-////        http.addFilterAfter(new B(), new A().getClass());
+//        http.csrf().disable()
+//                .authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and()
+//                .addFilterBefore(customUsernamePasswordAuthenticationFiltersssssssss(), BasicAuthenticationFilter.class);
+//        /*.addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)*/;
+//
+//
 //    }
 //
-    public void configure(AuthenticationManagerBuilder auth)  throws Exception {
-
-        auth.authenticationProvider(myAuthenticationProvider);
-    }
-}
+////    @Override
+////    protected void configure(HttpSecurity http) throws Exception {
+////        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+////        http.addFilterBefore(new CustomUsernamePasswordAuthenticationFilter(), DelegatingFilterProxy.class);
+//////        http.addFilterAfter(new B(), new A().getClass());
+////    }
+////
+//    public void configure(AuthenticationManagerBuilder auth)  throws Exception {
+//
+//        auth.authenticationProvider(myAuthenticationProvider);
+//    }
+//}
