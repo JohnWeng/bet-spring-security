@@ -19,13 +19,13 @@ public class Controller {
 
 	}
 	
-	@RequestMapping(value = "/",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/ttt",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	Map<String, String> helloUser(Principal principal) {
 		Map<String, String> result = new HashMap<>();
 		result.put("usernamlllllllllle", principal.getName());
 		return result;
 	}
-	@RequestMapping(value = "/2", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/2", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	String helloUser2() {
 		return "hello";
 	}

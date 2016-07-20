@@ -62,8 +62,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
 
 
     }
-//    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-//        return true;
-//    }
+    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        return true;
+    }
 
 }
