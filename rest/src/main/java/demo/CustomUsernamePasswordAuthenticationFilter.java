@@ -51,9 +51,11 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
 //            String e = (String) request.getAttributeNames().nextElement();
 //            System.out.println("param name : " + e + " and param value : " + request.getAttribute(e));
 //        }
-        
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+
+    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+    authRequest.setDetails(loginCredentials);
+
 
 //        // Allow subclasses to set the "details" property
 //        setDetails(request, authRequest);

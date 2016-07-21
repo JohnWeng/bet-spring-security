@@ -22,13 +22,19 @@ public class customAuthenticationProvider implements AuthenticationProvider{
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getPrincipal() + "";
         String password = authentication.getCredentials() + "";
+        LoginCredentials    loginCredentials = (LoginCredentials) authentication.getDetails();
+// here we make the call then we get back a string.
         // Code to make rest call here and check for OK or Unauthorised.
         // What do I return?
 System.out.print("ggggggggggggggggg");
+//        System.out.print(loginCredentials);
         List<GrantedAuthority> grantedAuths = new ArrayList<>();
         grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-     //   DaoAuthenticationProvider,
+
+//        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
+//        usernamePasswordAuthenticationToken.setDetails(response);
+//        return usernamePasswordAuthenticationToken;
         return new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
     }
 

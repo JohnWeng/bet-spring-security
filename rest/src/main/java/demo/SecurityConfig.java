@@ -8,11 +8,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @EnableWebSecurity
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 	BasicAuthenticationFilter fd;
+	HttpSessionSecurityContextRepository f;
+	SecurityContextPersistenceFilter g;
+//	OrderedRequestContextFilter
 //	HttpSessionRequestCache
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -21,6 +26,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and()
 				.httpBasic()
+				.authenticationEntryPoint(dRFAuthenticationEntryPoint())
 				.and()
 				.requestCache()
 				.requestCache(httpSessionRequestCache())
@@ -35,6 +41,12 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return httpSessionRequestCache;
 	}
 
+	@Bean
+	public DRFAuthenticationEntryPoint dRFAuthenticationEntryPoint() {
+		return new DRFAuthenticationEntryPoint();
+
+	}
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -43,6 +55,10 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.withUser("user").password("password").roles("USER");
 	}
 }
+
+
+
+
 
 
 /**
