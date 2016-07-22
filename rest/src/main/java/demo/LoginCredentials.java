@@ -1,7 +1,13 @@
 package demo;
 
+import java.io.Serializable;
 
-public class LoginCredentials {
+
+public class LoginCredentials implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8604070582661979517L;
 	private String userName;
 	private String userPassword;
 	private Location userLocation;

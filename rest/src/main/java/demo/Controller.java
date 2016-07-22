@@ -36,9 +36,9 @@ public class Controller {
 		return result;
 	}
 
-	@RequestMapping(value = "/principal",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	SecurityContext principal(SecurityContext authentication) {
-		return authentication;
+	@RequestMapping(value = "/principal",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	Authentication principal(Authentication Authentication) {
+		return Authentication;
 	}
 
 

@@ -64,8 +64,9 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
 
 
     }
-    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        return true;
-    }
+// no need it now, we use  super(new AntPathRequestMatcher("/login","POST"));
+//    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+//        return true;
+//    }
 
 }
