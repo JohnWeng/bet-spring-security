@@ -1,5 +1,8 @@
 package demo;
 
+import com.drf.betsservice.model.LoginCredentials;
+import com.drf.betsservice.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,24 +20,37 @@ import java.util.List;
 
 @Component
 public class customAuthenticationProvider implements AuthenticationProvider{
-    int bac=5;
+////
+    @Autowired
+    private UserService userService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getPrincipal() + "";
         String password = authentication.getCredentials() + "";
-        LoginCredentials    loginCredentials = (LoginCredentials) authentication.getDetails();
+        LoginCredentials loginCredentials = (LoginCredentials) authentication.getDetails();
+        String reponse="";
+
+//        try {
+//            reponse=userService.login(loginCredentials);
+//            System.out.println(reponse);
+//        } catch (Exception e) {
+//            throw new InsufficientAuthenticationException(e.getMessage(), e);
+//        }
+
 // here we make the call then we get back a string.
         // Code to make rest call here and check for OK or Unauthorised.
         // What do I return?
-System.out.print("ggggggggggggggggg");
+System.out.println("ggggggggggggggggg");
 //        System.out.print(loginCredentials);
         List<GrantedAuthority> grantedAuths = new ArrayList<>();
         grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 
 
 //        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
-//        usernamePasswordAuthenticationToken.setDetails(response);
+//        usernamePasswordAuthenticationToken.setDetails(reponse);
 //        return usernamePasswordAuthenticationToken;
+
         return new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
     }
 

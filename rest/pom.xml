@@ -50,8 +50,11 @@
             <scope>test</scope>
         </dependency>
 
-
-
+        <dependency>
+            <groupId>com.drf</groupId>
+            <artifactId>betsservice-client</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

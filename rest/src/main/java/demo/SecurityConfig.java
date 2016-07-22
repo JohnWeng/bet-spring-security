@@ -1,12 +1,11 @@
 package demo;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.drf.betsservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -15,6 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //@EnableWebSecurity
 //class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -133,6 +135,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        CustomSuccessHandler customSuccessHandler = new CustomSuccessHandler();
 	        return customSuccessHandler;
 	    }
+
+    @Bean
+    public HttpInvokerProxyFactoryBean httpInvokerProxy() {
+        HttpInvokerProxyFactoryBean proxy = new HttpInvokerProxyFactoryBean();
+        proxy.setServiceInterface(UserService.class);
+        proxy.setServiceUrl("http://localhost:9090/betsservice//betsUserService.http");
+        proxy.afterPropertiesSet();
+        UserService userService=(UserService)proxy.getObject();
+        try {
+            String result=userService.test();
+
+            System.out.println(result);
+
+            System.out.println(result);
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//		userService.test();
+
+
+
+        return proxy;
+    }
 
     @Bean
     @Override

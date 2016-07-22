@@ -26,7 +26,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			response.getWriter().print("{\"responseCode\":\"SUCCESS\"}");
 			response.getWriter().flush();
 		} else {
-			super.onAuthenticationSuccess(request, response, auth);
+			super.onAuthenticationSuccess(request, response, auth);// here it will use defaultRedirectoStrary to redirect to "/"
 		}
 	}
 }

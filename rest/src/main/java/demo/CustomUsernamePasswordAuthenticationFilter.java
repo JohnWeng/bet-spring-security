@@ -1,5 +1,6 @@
 package demo;
 
+import com.drf.betsservice.model.LoginCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,6 +60,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenti
 
 //        // Allow subclasses to set the "details" property
 //        setDetails(request, authRequest);
+
 
         return this.getAuthenticationManager().authenticate(authRequest);
 
