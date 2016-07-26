@@ -41,7 +41,6 @@ public class DemoApplication {
 	@Bean
 	HttpSessionStrategy httpSessionStrategy() {
 		HeaderHttpSessionStrategy headerHttpSessionStrategy = new HeaderHttpSessionStrategy();
-		headerHttpSessionStrategy.setHeaderName("drf-auth-token");
 		return headerHttpSessionStrategy;
 
 	}
