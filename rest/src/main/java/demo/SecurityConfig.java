@@ -2,6 +2,7 @@ package demo;
 
 
 import com.drf.betsservice.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,15 +123,10 @@ import java.util.List;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-//
-
-//
-//    @Bean( name="myAuthenticationManagerssssssssss")
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//
-//    }
+	 @Bean
+	    public SessionFixationProtectionStrategy sessionFixationProtectionStrategy() {
+	        return new SessionFixationProtectionStrategy();
+	    }
 
 	 @Bean
 	    public CustomSuccessHandler customSuccessHandler() {
@@ -140,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public HttpInvokerProxyFactoryBean httpInvokerProxy() {
         HttpInvokerProxyFactoryBean proxy = new HttpInvokerProxyFactoryBean();
         proxy.setServiceInterface(UserService.class);
-        proxy.setServiceUrl("http://localhost:9090/betsservice//betsUserService.http");
+        proxy.setServiceUrl("http://dnjhuappxbapi01.drf.corp:8080/bets-api/betsUserService.http");
         proxy.afterPropertiesSet();
         UserService userService=(UserService)proxy.getObject();
         try {
@@ -180,6 +178,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
         customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
         customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(customSuccessHandler());
+        customUsernamePasswordAuthenticationFilter.setSessionAuthenticationStrategy(sessionFixationProtectionStrategy());
         return customUsernamePasswordAuthenticationFilter;
     }
 
@@ -190,14 +189,52 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated()                
                 .and()
-                .addFilterBefore(customUsernamePasswordAuthenticationFiltersssssssss(), BasicAuthenticationFilter.class);
+                .sessionManagement().sessionAuthenticationStrategy(sessionFixationProtectionStrategy())
+                .and()
+                .addFilterBefore(customUsernamePasswordAuthenticationFiltersssssssss(), BasicAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(dRFAuthenticationEntryPoint())
+                ;
         /*.addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)*/;
 
+        
 
     }
+    
+    
+	protected void configure2(HttpSecurity http) throws Exception {
+	http
+			.authorizeRequests()
+			.anyRequest().authenticated()
+			.and()
+			.httpBasic()
+			.authenticationEntryPoint(dRFAuthenticationEntryPoint())
+			.and()
+			.requestCache()
+			.requestCache(httpSessionRequestCache())
+			.and()
+			.anonymous().disable();}
 
+
+	
+	
+	@Bean
+	public HttpSessionRequestCache httpSessionRequestCache() {
+		HttpSessionRequestCache httpSessionRequestCache = new HttpSessionRequestCache();
+		httpSessionRequestCache.setCreateSessionAllowed(false);
+		return httpSessionRequestCache;
+	}
+
+	@Bean
+	public DRFAuthenticationEntryPoint dRFAuthenticationEntryPoint() {
+		return new DRFAuthenticationEntryPoint();
+
+	}
+	
+	
+	
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

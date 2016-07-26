@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <OL>
- * <LI> Confirm that the Redis instance is avaialbe. Perhaps run {@code FLUSHDB}, but only </LI>
- * <LI>First {@code curl  http://localhost:8080/ -v -u user:password}. This will let you see the headers. Make sure to extract the
- * {@code x-auth-token} and store it.
- * </LI>
- * <LI> Send a request specifying only the token, not the username and password.
+ * <LI>Confirm that the Redis instance is avaialbe. Perhaps run {@code FLUSHDB},
+ * but only</LI>
+ * <LI>First {@code curl  http://localhost:8080/ -v -u user:password}. This will
+ * let you see the headers. Make sure to extract the {@code x-auth-token} and
+ * store it.</LI>
+ * <LI>Send a request specifying only the token, not the username and password.
  * {@code curl  http://localhost:8080/ -H "x-auth-token: f4a06478-a3c9-4162-90a0-fdaf5110b7f1"}
  * </LI>
  * <LI>Verify the results: {@code redis-cli keys '*' | xargs redis-cli del}</LI>
@@ -39,11 +40,10 @@ public class DemoApplication {
 
 	@Bean
 	HttpSessionStrategy httpSessionStrategy() {
-		return new HeaderHttpSessionStrategy();
+		HeaderHttpSessionStrategy headerHttpSessionStrategy = new HeaderHttpSessionStrategy();
+		headerHttpSessionStrategy.setHeaderName("drf-auth-token");
+		return headerHttpSessionStrategy;
+
 	}
 
-
 }
-
-
-

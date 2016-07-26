@@ -2,8 +2,10 @@ package demo;
 
 import com.drf.betsservice.model.LoginCredentials;
 import com.drf.betsservice.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -31,12 +33,12 @@ public class customAuthenticationProvider implements AuthenticationProvider{
         LoginCredentials loginCredentials = (LoginCredentials) authentication.getDetails();
         String reponse="";
 
-//        try {
-//            reponse=userService.login(loginCredentials);
-//            System.out.println(reponse);
-//        } catch (Exception e) {
-//            throw new InsufficientAuthenticationException(e.getMessage(), e);
-//        }
+        try {
+            reponse=userService.login(loginCredentials);
+            System.out.println(reponse);
+        } catch (Exception e) {
+            throw new InsufficientAuthenticationException(e.getMessage(), e);
+        }
 
 // here we make the call then we get back a string.
         // Code to make rest call here and check for OK or Unauthorised.
