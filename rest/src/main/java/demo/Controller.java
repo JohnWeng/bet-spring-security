@@ -1,8 +1,8 @@
 package demo;
 
+import com.drf.betsservice.model.LoginResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,8 +37,11 @@ public class Controller {
 	}
 
 	@RequestMapping(value = "/principal",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	Authentication principal(Authentication Authentication) {
-		return Authentication;
+	LoginResponse principal(Authentication authentication ) {
+
+		LoginResponse loginResponse=(LoginResponse)authentication.getDetails();
+
+		return loginResponse;
 	}
 
 

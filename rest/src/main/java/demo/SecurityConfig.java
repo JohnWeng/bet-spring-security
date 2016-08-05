@@ -1,25 +1,7 @@
 package demo;
 
 
-import com.drf.betsservice.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-
-import java.util.ArrayList;
-import java.util.List;
-
-//@EnableWebSecurity
+//@EnableWebSecurity(debug = true)
 //class SecurityConfig extends WebSecurityConfigurerAdapter {
 //	BasicAuthenticationFilter fd;
 //	HttpSessionSecurityContextRepository f;
@@ -63,10 +45,23 @@ import java.util.List;
 //	}
 //}
 
+import com.drf.betsservice.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
-
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jweng on 7/12/2016.
@@ -95,7 +90,7 @@ import java.util.List;
 //
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(new customAuthenticationProvider());
+//        auth.authenticationProvider(new DRFAuthenticationProvider());
 ///*		auth
 //				.inMemoryAuthentication()
 //				.withUser("user").password("password").roles("USER");*/
@@ -113,26 +108,26 @@ import java.util.List;
 //}
 
 
-
-
 @Configuration
 @EnableWebSecurity(debug = true)
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${betsService-server-host}")
+    private String betsServiceHost;
 
 
-	 @Bean
-	    public CustomSuccessHandler customSuccessHandler() {
-	        CustomSuccessHandler customSuccessHandler = new CustomSuccessHandler();
-	        return customSuccessHandler;
-	    }
+    @Bean
+    public DRFCustomSuccessHandler drfCustomSuccessHandler() {
+        DRFCustomSuccessHandler drfCustomSuccessHandler = new DRFCustomSuccessHandler();
+        return drfCustomSuccessHandler;
+    }
 
     @Bean
     public HttpInvokerProxyFactoryBean httpInvokerProxy() {
         HttpInvokerProxyFactoryBean proxy = new HttpInvokerProxyFactoryBean();
         proxy.setServiceInterface(UserService.class);
-        proxy.setServiceUrl("http://dnjhuappxbapi01.drf.corp:8080/bets-api/betsUserService.http");
+        proxy.setServiceUrl(betsServiceHost);
         proxy.afterPropertiesSet();
         UserService userService = (UserService) proxy.getObject();
         try {
@@ -153,31 +148,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         List<AuthenticationProvider> authenticationProviderList = new ArrayList<AuthenticationProvider>();
-        authenticationProviderList.add(myAuthenticationProvider);
+        authenticationProviderList.add(drfAuthenticationProvider);
         AuthenticationManager authenticationManager = new ProviderManager(
                 authenticationProviderList);
         return authenticationManager;
     }
 
     @Bean
-    CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFiltersssssssss() throws Exception {
+    DRFAuthenticationFilter drfAuthenticationFilter() throws Exception {
         System.out.print("dffffffffffffff");
-        CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
-        customUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
-        customUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(customSuccessHandler());
-        return customUsernamePasswordAuthenticationFilter;
+        DRFAuthenticationFilter drfAuthenticationFilter = new DRFAuthenticationFilter();
+        drfAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        drfAuthenticationFilter.setAuthenticationSuccessHandler(drfCustomSuccessHandler());
+        return drfAuthenticationFilter;
     }
 
 
     @Autowired
-    private customAuthenticationProvider myAuthenticationProvider;
+    private DRFAuthenticationProvider drfAuthenticationProvider;
 
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .anyRequest().authenticated()                
+                .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(customUsernamePasswordAuthenticationFiltersssssssss(), BasicAuthenticationFilter.class)
+                .addFilterBefore(drfAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(dRFAuthenticationEntryPoint())
                 .and()
@@ -185,36 +180,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestCache(httpSessionRequestCache())
                 .and()
                 .anonymous().disable()
-                ;
-        /*.addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)*/;
+        ;
+        /*.addFilterBefore(customUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)*/
 
-        
+
 
     }
-    
-    
 
 
-	
-	
-	@Bean
-	public HttpSessionRequestCache httpSessionRequestCache() {
-		HttpSessionRequestCache httpSessionRequestCache = new HttpSessionRequestCache();
-		httpSessionRequestCache.setCreateSessionAllowed(false);
-		return httpSessionRequestCache;
-	}
-
-	@Bean
-	public DRFAuthenticationEntryPoint dRFAuthenticationEntryPoint() {
-		return new DRFAuthenticationEntryPoint();
-
-	}
-	
-	
-	
-
-    public void configure(AuthenticationManagerBuilder auth)  throws Exception {
-
-        auth.authenticationProvider(myAuthenticationProvider);
+    @Bean
+    public HttpSessionRequestCache httpSessionRequestCache() {
+        HttpSessionRequestCache httpSessionRequestCache = new HttpSessionRequestCache();
+        httpSessionRequestCache.setCreateSessionAllowed(false);
+        return httpSessionRequestCache;
     }
+
+    @Bean
+    public DRFAuthenticationEntryPoint dRFAuthenticationEntryPoint() {
+        return new DRFAuthenticationEntryPoint();
+
+    }
+
+
+//    public void configure(AuthenticationManagerBuilder auth)  throws Exception {
+//
+//        auth.authenticationProvider(drfAuthenticationProvider);
+//    }
 }

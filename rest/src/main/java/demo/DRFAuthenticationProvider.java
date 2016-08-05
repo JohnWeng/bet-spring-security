@@ -1,8 +1,8 @@
 package demo;
 
 import com.drf.betsservice.model.LoginCredentials;
+import com.drf.betsservice.model.LoginResponse;
 import com.drf.betsservice.services.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 @Component
-public class customAuthenticationProvider implements AuthenticationProvider{
+public class DRFAuthenticationProvider implements AuthenticationProvider{
 ////
     @Autowired
     private UserService userService;
@@ -31,11 +31,11 @@ public class customAuthenticationProvider implements AuthenticationProvider{
         String username = authentication.getPrincipal() + "";
         String password = authentication.getCredentials() + "";
         LoginCredentials loginCredentials = (LoginCredentials) authentication.getDetails();
-        String reponse="";
+        LoginResponse loginResponse;
 
         try {
-            reponse=userService.login(loginCredentials);
-            System.out.println(reponse);
+            loginResponse=userService.login(loginCredentials);
+            System.out.println(loginResponse);
         } catch (Exception e) {
             throw new InsufficientAuthenticationException(e.getMessage(), e);
         }
@@ -49,11 +49,11 @@ System.out.println("ggggggggggggggggg");
         grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 
 
-//        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
-//        usernamePasswordAuthenticationToken.setDetails(reponse);
-//        return usernamePasswordAuthenticationToken;
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
+        usernamePasswordAuthenticationToken.setDetails(loginResponse);
+        return usernamePasswordAuthenticationToken;
 
-        return new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
+//        return new UsernamePasswordAuthenticationToken(username, password,  grantedAuths);
     }
 
     @Override

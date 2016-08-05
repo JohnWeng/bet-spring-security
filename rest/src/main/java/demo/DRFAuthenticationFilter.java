@@ -15,14 +15,14 @@ import java.io.IOException;
 /**
  * Created by jweng on 7/12/2016.
  */
-public class CustomUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class DRFAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    public CustomUsernamePasswordAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    public DRFAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
         // TODO Auto-generated constructor stub
     }
 
-    public CustomUsernamePasswordAuthenticationFilter() {
+    public DRFAuthenticationFilter() {
         super(new AntPathRequestMatcher("/login","POST"));
         // TODO Auto-generated constructor stub
     }
